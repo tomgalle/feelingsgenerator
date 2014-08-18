@@ -44,6 +44,9 @@
                text-transform: uppercase;
 
           }
+          #page-wrapper {
+           display: none;
+          }
 
           </style>
 
@@ -53,17 +56,33 @@
 
   
      <body>
-    
-    
 
-        
+          <div id="page-wrapper">
+               <h1>Web Speech Synthesis Demo</h1>
+               <p id="msg"></p>
+               <input type="text" name="speech-msg" id="speech-msg" x-webkit-speech>
+               <div class="option">
+               <label for="voice">Voice</label>
+               <select name="voice" id="voice"></select>
+               </div>
+               <div class="option">
+               <label for="volume">Volume</label>
+               <input type="range" min="0" max="1" step="0.1" name="volume" id="volume" value="1">
+               </div>
+               <div class="option">
+               <label for="rate">Rate</label>
+               <input type="range" min="0.1" max="10" step="0.1" name="rate" id="rate" value="1">
+               </div>
+               <div class="option">
+               <label for="pitch">Pitch</label>
+               <input type="range" min="0" max="2" step="0.1" name="pitch" id="pitch" value="1">
+               </div>
+          </div>
+
 
           <div class="textbox">Your feeling is <span class="feeling"></span></div>
           <div class="button">Generate New Feeling</div>
-
-          <img class="gifbox" />
-          <!-- <img class="gifbox2" src="http://media2.giphy.com/media/P2eWE9KN62V3O/giphy.gif" /> -->
-          
+         
       
           <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
           <script type="text/javascript" src="js/script.js"></script>
@@ -72,8 +91,102 @@
 
 
 
+               /* * * * * * * * * * * *
+                * * * * * * * * * * * * 
+                * TEXT TO SPEECH CODE *
+                * * * * * * * * * * * *                       
+                * * * * * * * * * * * */
+
+
+
+               
+               // Check for browser support
+               var supportMsg = document.getElementById('msg');
+               if ('speechSynthesis' in window) {
+                    supportMsg.innerHTML = 'Your browser <strong>supports</strong> speech synthesis.';
+               } else {
+                    supportMsg.innerHTML = 'Sorry your browser <strong>does not support</strong> speech synthesis.<br>Try this in <a href="http://www.google.co.uk/intl/en/chrome/browser/canary.html">Chrome Canary</a>.';
+                    supportMsg.classList.add('not-supported');
+               }
+
+               // Get the 'speak' button
+               var button = document.getElementById('speak');
+
+               // Get the text input element.
+               var speechMsgInput = document.getElementById('speech-msg');
+
+               // Get the voice select element.
+               var voiceSelect = document.getElementById('voice');
+
+               // Get the attribute controls.
+               var volumeInput = document.getElementById('volume');
+               var rateInput = document.getElementById('rate');
+               var pitchInput = document.getElementById('pitch');
+
+               // Fetch the list of voices and populate the voice options.
+               function loadVoices() {
+                 // Fetch the available voices.
+                    var voices = speechSynthesis.getVoices();
+                 
+                 // Loop through each of the voices.
+                    voices.forEach(function(voice, i) {
+                   // Create a new option element.
+                         var option = document.createElement('option');
+                   
+                   // Set the options value and text.
+                         option.value = voice.name;
+                         option.innerHTML = voice.name;
+                           
+                   // Add the option to the voice selector.
+                         voiceSelect.appendChild(option);
+                    });
+               }
+
+               // Execute loadVoices.
+               loadVoices();
+
+               // Chrome loads voices asynchronously.
+               window.speechSynthesis.onvoiceschanged = function(e) {
+                 loadVoices();
+               };
+
+               // Create a new utterance for the specified text and add it to
+               // the queue.
+               function speak(text) {
+                 // Create a new instance of SpeechSynthesisUtterance.
+                    var msg = new SpeechSynthesisUtterance();
+                 
+                 // Set the text.
+                    msg.text = text;
+                 
+                 // Set the attributes.
+                    msg.volume = parseFloat(volumeInput.value);
+                    msg.rate = parseFloat(rateInput.value);
+                    msg.pitch = parseFloat(pitchInput.value);
+                 
+                 // If a voice has been selected, find the voice and set the
+                 // utterance instance's voice attribute.
+                    if (voiceSelect.value) {
+                         msg.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name == voiceSelect.value; })[0];
+                    }
+                 
+                 // Queue this utterance.
+                    window.speechSynthesis.speak(msg);
+               }
+
+
+
+               /* * * * * * * * * * * *
+                * * * * * * * * * * * * 
+                * FEELINGS GENERATOR  *
+                * * * * * * * * * * * *                       
+                * * * * * * * * * * * */
+
+
+
+
                function createWord() {
-                    var feelings = ['Sad', 'ANNOYED', 'IRRITATED', 'EMOTIONAL', 'CUTE', 'COMPLICATED', 'LONELY', 'energetic', 'liberated', 'free', 'surprised', 'clever', 'lucky', 'relaxed', 'blessed', 'impulsive', 'fascinated', 'warm', 'empty', 'forced', 'miserable', 'guilty', 'annoyed'];
+                    var feelings = ['Sad', 'ANNOYED', 'IRRITATED', 'EMOTIONAL', 'CUTE', 'COMPLICATED','energetic', 'liberated', 'free', 'surprised', 'clever', 'lucky', 'relaxed', 'blessed', 'impulsive', 'fascinated', 'warm', 'empty', 'forced', 'miserable', 'guilty', 'annoyed', 'confident', 'amazed', 'sympathetic', 'satisfied', 'receptive', 'accepting', 'kind', 'great', 'joyous', 'delighted', 'thankful', 'important', 'satisfied', 'glad', 'wonderful', 'frisky', 'animated', 'liberated', 'courageous', 'energetic', 'thrilled', 'wonderful', 'peaceful', 'comfortable', 'pleased', 'certain', 'bright', 'rejected', 'victimized', 'deprived', 'tearful', 'lonely', 'unhappy', 'pessimistic', 'cowardly', 'nervous', 'scared', 'worried', 'anxious', 'alarmed', 'panic', 'timid', 'frightened', 'offended', 'crushed', 'desperate', 'lonely', 'bored', 'dull', 'shy', 'upset', 'skeptical', 'unsure', 'pessimistic', 'pathetic', 'tragic', 'vulnerable', 'empty', 'disappointed', 'irritated', 'bitter', 'aggressive', 'boiling', 'excited', 'determined', 'enthusiastic', 'affectionate', 'warm', 'touched', 'comforted', 'passionate' ]; 
 
                     var random = Math.floor(Math.random() * feelings.length);
                     var randomfeeling = feelings[random];
@@ -107,11 +220,13 @@
 
                               $('.feeling').empty();
                               $('.feeling').append(randomfeeling);
+                              speak(randomfeeling);
                               // $('.gifbox').append(gifUrl);
                               // $('body').append(gifUrl);
 
                               console.log(GIFdata);
                               console.log(gifUrl);
+
                          }
                     });
                }
@@ -121,17 +236,20 @@
                $('.button').on( 'click', function(){ 
                     createWord();
                });
+
+
+
+
+
+
+
+
+
               
 
 
-              
+
             
-
-              
-
-
-
-
 
           </script>
 
