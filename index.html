@@ -97,8 +97,6 @@
                 * * * * * * * * * * * *                       
                 * * * * * * * * * * * */
 
-
-
                
                // Check for browser support
                var supportMsg = document.getElementById('msg');
@@ -182,6 +180,15 @@
                 * * * * * * * * * * * *                       
                 * * * * * * * * * * * */
 
+                function init() {
+                  createWord();
+
+                    $('.button').on( 'click', function(){ 
+                      createWord();
+                    });
+
+
+                }
 
 
 
@@ -221,8 +228,6 @@
                               $('.feeling').empty();
                               $('.feeling').append(randomfeeling);
                               speak(randomfeeling);
-                              // $('.gifbox').append(gifUrl);
-                              // $('body').append(gifUrl);
 
                               console.log(GIFdata);
                               console.log(gifUrl);
@@ -231,21 +236,7 @@
                     });
                }
 
-               createWord();
-
-               $('.button').on( 'click', function(){ 
-                    createWord();
-               });
-
-
-
-
-
-
-
-
-
-              
+               
 
 
 
