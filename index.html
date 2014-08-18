@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+     <head>
+
+          <meta charset="utf-8">
+          <title>Feelings Generator</title>
+
+          <meta name="description" content=" "/>
+          <link rel="image_src" href="img/ .png" />
+
+          <link rel="stylesheet" type="text/css" href="css/normalize.css">   
+          <link rel="stylesheet" type="text/css" href="css/main.css">
+          
+          <style>
+
+
+          .button {
+               width: 230px;
+               background-color: white;
+               text-align: center;
+               padding: 10px;
+               margin: 0 auto;
+               color: black;
+               cursor: pointer;
+               margin-top: 20px;
+               text-transform: uppercase;
+               -webkit-box-shadow: 8px 8px 16px 0px rgba(50, 50, 50, 0.75);
+               -moz-box-shadow:    8px 8px 16px 0px rgba(50, 50, 50, 0.75);
+               box-shadow:         8px 8px 16px 0px rgba(50, 50, 50, 0.75);
+          }
+
+          .textbox {
+               padding-top: 50px; 
+               color: white;
+               text-align: center;
+               margin-top: 10px;
+               font-size: 35px;
+          }
+
+          .feeling {
+               font-weight: bold;
+               text-transform: uppercase;
+
+          }
+
+          </style>
+
+
+
+     </head>
+
+  
+     <body>
+    
+    
+
+        
+
+          <div class="textbox">Your feeling is <span class="feeling"></span></div>
+          <div class="button">Generate New Feeling</div>
+
+          <img class="gifbox" />
+          <!-- <img class="gifbox2" src="http://media2.giphy.com/media/P2eWE9KN62V3O/giphy.gif" /> -->
+          
+      
+          <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+          <script type="text/javascript" src="js/script.js"></script>
+
+          <script>
+
+
+
+               function createWord() {
+                    var feelings = ['Sad', 'ANNOYED', 'IRRITATED', 'EMOTIONAL', 'CUTE', 'COMPLICATED', 'LONELY', 'energetic', 'liberated', 'free', 'surprised', 'clever', 'lucky', 'relaxed', 'blessed', 'impulsive', 'fascinated', 'warm', 'empty', 'forced', 'miserable', 'guilty', 'annoyed'];
+
+                    var random = Math.floor(Math.random() * feelings.length);
+                    var randomfeeling = feelings[random];
+                    console.log(randomfeeling);
+
+                    getgif(randomfeeling);
+               }
+
+
+               function getgif(randomfeeling){
+
+                    $.ajax({
+                         url: 'http://api.giphy.com/v1/gifs/search?q=' + randomfeeling + '&api_key=dc6zaTOxFJmzC&limit=5',
+                         datatype: 'json',
+                         success: function(GIFdata){
+                              var randNumber = Math.floor(Math.random() * 5);
+                              var gifUrl = GIFdata.data[randNumber].images.original.url;
+                              
+                              // $('.gifbox').attr("src", gifUrl);
+
+                              $('body').css({
+                                   'background-image' : 'url(' + gifUrl + ')',
+                                   'background-position' : 'center',
+                                   'background-attachment' : 'fixed',
+                                   'background-repeat' : 'no-repeat',
+                                   '-webkit-background-size' : 'cover',
+                                   '-moz-background-size' : 'cover',
+                                   '-o-background-size' : 'cover',
+                                   'background-size' : 'cover'
+                              });
+
+                              $('.feeling').empty();
+                              $('.feeling').append(randomfeeling);
+                              // $('.gifbox').append(gifUrl);
+                              // $('body').append(gifUrl);
+
+                              console.log(GIFdata);
+                              console.log(gifUrl);
+                         }
+                    });
+               }
+
+               createWord();
+
+               $('.button').on( 'click', function(){ 
+                    createWord();
+               });
+              
+
+
+              
+            
+
+              
+
+
+
+
+
+          </script>
+
+
+
+     </body>
+</html>
+
+
+
+
+
